@@ -4,5 +4,5 @@
 | [软件设计](https://github.com/dongjiaqiang/SkillMindMap/blob/master/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E8%84%91%E5%9B%BE.md) | 设计原则 设计模式 软件重构 |
 | Java虚拟机 |    |
 | Scala程序设计语言 |   |
-| Java程序设计语言 | |
+| Java程序设计语言 | 语法 并发 最佳实践 |
 | 流系统脑图 | |
