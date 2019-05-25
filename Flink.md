@@ -105,6 +105,41 @@ env.execute("Compute average sensor temperature")
 
 #### 转换
 
+##### 类型
+
+| 转换类型 | 说明 |
+| --- | ---- |
+| Basic Transformations | 独立地对流中每个事件进行转换 |
+| KeyedStream Transformations | 将流中的事件按键分组 对分组后的每组事件进行转换 |
+| MultiStream transformations | 实现将多个流合并为一个流或切分一个流为多个流 |
+|  Distribution Transformations| 实现重新组织流中的事件 |
+
+##### Basic Transformations
+
+| 转换算子 | 说明 | 接口 |
+| ------- | ----- |  ----- |
+| map  | 通过用户自定义映射函数对流中事件进行映射  |  // T: the type of input elements<br>// O: the type of output elements<br> MapFunction[T, O]<br>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;> map(T): O |
+| filter | 通过用户自定义过滤函数对流中事件进行过滤 | // T: the type of input elements <br> // O: the type of output elementsFlatMapFunction[T, O] <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;> flatMap(T, Collector[O]): Unit |
+| flatMap | 通过用户自定义扁平映射函数对流中事件进行扁平映射 | // T: the type of input elements <br>// O: the type of output elements FlatMapFunction[T, O] <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;> flatMap(T, Collector[O]): Unit|
+
+##### KeyedStream Transformations
+
+| 转换算子 | 说明 | 接口 |
+| ------- | ----- | ------- |
+| keyBy | 通过该转换通过在事件中指定一个字段为键可以将一个DataStream流转换为KeyedStream流 | val readings: DataStream[SensorReading] = ... <br> val keyed: KeyedStream[SensorReading, String] = readings.keyBy(r => r.id) |
+| rolling aggregations | 该算子通过应用预定义聚集转换算子将KeyedStream流转换为DataStream流 如sum minimum和maximum | |
+| reduce | 该算子通过应用自定义聚集算子将KeyedStream流转换为DataStream流 | // T: the element type <br> ReduceFunction[T] <br> &nbsp;&nbsp;&nbsp; > reduce(T, T): T|
+
+
+##### MultiStream Transformations
+
+| 转换算子 | 说明  | 接口 |
+| ----- | ------- | -------|
+| union  | 该算子实现合并多个独立具有相同类型的DataStream流为一个流 后续的转换算子将应用到所有被合并的流上 |val parisStream: DataStream[SensorReading] = ... <br> val tokyoStream: DataStream[SensorReading] = ... <br>val allCities: DataStream[SensorReading] = parisStream.union(tokyoStream, rioStream)|
+| | | |
+| split  | slit算子实现union算子相反的功能  其可以将一个输入流切分为多个相同类型的输出流 对每个输入事件其可以被发送给零个 一个或多个输出流 该算子接受OutputSelector实例其定义流事件如何被发送给特定的输出流 | val inputStream: DataStream[(Int, String)] = ... <br> val splitted: SplitStream[(Int, String)] = inputStream.split(t => if (t._1 > 1000) Seq("large") else Seq("small")) <br>val large: DataStream[(Int, String)] = splitted.select("large") <br> val small: DataStream[(Int, String)] = splitted.select("small") <br> val all: DataStream[(Int, String)] = splitted.select("small", "large")  |
+##### Distribution Transformations
+
 #### 窗口算子
 
 #### 状态算子
