@@ -133,12 +133,16 @@ env.execute("Compute average sensor temperature")
 
 ##### MultiStream Transformations
 
-| 转换算子 | 说明  | 接口 |
+| 转换算子 | 说明  | 代码 |
 | ----- | ------- | -------|
-| union  | 该算子实现合并多个独立具有相同类型的DataStream流为一个流 后续的转换算子将应用到所有被合并的流上 |val parisStream: DataStream[SensorReading] = ... <br> val tokyoStream: DataStream[SensorReading] = ... <br>val allCities: DataStream[SensorReading] = parisStream.union(tokyoStream, rioStream)|
+| union  | 该算子实现合并多个独立具有相同类型的DataStream流为一个流 后续的转换算子将应用到所有被合并的流上 |```val parisStream: DataStream[SensorReading] = ... <br> val tokyoStream: DataStream[SensorReading] = ... <br>val allCities: DataStream[SensorReading] = parisStream.union(tokyoStream, rioStream)```|
 | | | |
 | split  | slit算子实现union算子相反的功能  其可以将一个输入流切分为多个相同类型的输出流 对每个输入事件其可以被发送给零个 一个或多个输出流 该算子接受OutputSelector实例其定义流事件如何被发送给特定的输出流 | val inputStream: DataStream[(Int, String)] = ... <br> val splitted: SplitStream[(Int, String)] = inputStream.split(t => if (t._1 > 1000) Seq("large") else Seq("small")) <br>val large: DataStream[(Int, String)] = splitted.select("large") <br> val small: DataStream[(Int, String)] = splitted.select("small") <br> val all: DataStream[(Int, String)] = splitted.select("small", "large")  |
 ##### Distribution Transformations
+
+##### 并行度
+
+##### 类型
 
 #### 窗口算子
 
